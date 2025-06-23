@@ -18,3 +18,4 @@
 - kubectl apply -n duduland-nginx-uploads -f .\pv.yaml
 - kubectl apply -n duduland-nginx-uploads -f .\deployment.yaml
 
+x
