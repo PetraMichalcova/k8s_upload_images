@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dudu-app # DEPOLOYMENT
+  namespace: duduland-nginx-python-md #NAMESPACE
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dudu-app # ROVNAKE AKO METADA NAME = DEPLOYMENT
+  template:
+    metadata:
+      labels:
+        app: dudu-app # ROVNAKE AKO METADA NAME = DEPLOYMENT
+    spec:
+      volumes:
+      #VOLUMES PRE KONFIGURÁICE
+        - name: nginx-frontend-config #2.
+          configMap:
+            name: nginx-frontend-config
+      #VOLUMES PRE SKRIPTY
+        - name: scripts-frontend
+          persistentVolumeClaim:
+            claimName: dudu-pvc-md
+
+      containers:
+        - name: backend
+          image: petramichalcova/python-md
+          ports:
+            - containerPort: 5000
+          #volumeMounts:
+          #  - name: php-config
+          #    mountPath: /usr/local/etc/php/php.ini
+          #    subPath: php.ini
+          #  - name: app-code-backend NIE JE TREBA MOUNTOVAŤ LEBO UŽ JE TO V IMAGE KTORÝ BERIEM Z DOCKERHUBU - VŽDY SA SPÝTAŤ: SÚ TIE SÚBORY UŽ V IMAGE? AK NIE, TREBA ICH NAMOUTOVAŤ
+          #   mountPath: /var/www/html
+
+        - name: frontend
+          image: nginx:alpine
+          ports:
+            - containerPort: 81
+          volumeMounts:
+            - name: nginx-frontend-config
+              mountPath: /etc/nginx/conf.d/default.conf
+              subPath: default.conf
+            - name: scripts-frontend
+              mountPath: /var/www/html

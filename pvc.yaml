@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: dudu-pvc-md #nazov akykolvek, musi sa schodovat v deploymente
+  namespace: duduland-nginx-python-md
+spec:
+  storageClassName: manual
+  volumeName: dudu-pv-volume-md #musí sa schodovať s tým pv!!!
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 100Mi
+
